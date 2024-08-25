@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 const userSignup = async (req, res) => {
   try {
     const { fullName, email, phoneNumber, password, role } = req.body;
-    if (!fullName || !email || !phoneNumber || !password || role) {
+    if (!fullName || !email || !phoneNumber || !password || !role) {
       return res
         .status(400)
         .json({ success: false, message: "some fields are missing" });
@@ -92,7 +92,7 @@ const userLogin = async (req, res) => {
 
 const userLogout = async (req, res) => {
   try {
-    return res.status(200).cookie("token", { maxAge: 0 }).json({
+    return res.status(200).cookie("token", "", { maxAge: 0 }).json({
       success: true,
       message: "Logged out successfully",
     });

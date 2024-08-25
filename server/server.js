@@ -4,6 +4,7 @@ const cors = require("cors");
 require("dotenv").config();
 const connectDb = require("./dbConfig/dbConfig");
 const userRouter = require("./routes/userRouter");
+const companyRouter = require("./routes/companyRouter");
 const app = express();
 
 app.use(express.json());
@@ -25,6 +26,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/app/v1/user", userRouter);
+app.use("/app/v1/company", companyRouter);
 
 const port = process.env.PORT || 3000;
 app.listen(port, async () => {

@@ -11,7 +11,7 @@ const userRouter = express.Router();
 
 userRouter.post("/signup", userSignup);
 userRouter.post("/login", userLogin);
-userRouter.post("/logout", userLogout);
+userRouter.get("/logout", userLogout);
 userRouter.post("/updateProfile", validateJwtToken, updateProfile);
 
 module.exports = userRouter;

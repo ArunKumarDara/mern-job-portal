@@ -3,6 +3,7 @@ const {
   userSignup,
   userLogin,
   userLogout,
+  updateProfile,
 } = require("../controllers/userController");
 
 const userRouter = express.Router();

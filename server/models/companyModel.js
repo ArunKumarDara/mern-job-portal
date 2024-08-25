@@ -5,10 +5,10 @@ const companySchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
+      unique: true,
     },
     description: {
       type: String,
-      required: true,
     },
     website: {
       type: String,
@@ -18,7 +18,6 @@ const companySchema = new mongoose.Schema(
     },
     employees: {
       type: Number,
-      required: true,
     },
     logo: {
       type: String,

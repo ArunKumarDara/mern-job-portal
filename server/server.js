@@ -3,6 +3,7 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 require("dotenv").config();
 const connectDb = require("./dbConfig/dbConfig");
+const userRouter = require("./routes/userRouter");
 const app = express();
 
 app.use(express.json());
@@ -22,6 +23,8 @@ app.get("/", (req, res) => {
     message: "Welcome to the API!",
   });
 });
+
+app.use("/app/v1/user", userRouter);
 
 const port = process.env.PORT || 3000;
 app.listen(port, async () => {

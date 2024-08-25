@@ -40,7 +40,7 @@ const userSignup = async (req, res) => {
 const userLogin = async (req, res) => {
   try {
     const { email, password, role } = req.body;
-    if (!email || !password || role) {
+    if (!email || !password || !role) {
       return res
         .status(400)
         .json({ success: false, message: "some fields are missing" });

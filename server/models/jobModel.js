@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const jobSchema = new Schema(
+const jobSchema = new mongoose.Schema(
   {
     title: {
       type: String,
@@ -25,6 +25,10 @@ const jobSchema = new Schema(
     },
     jobType: {
       type: String,
+      required: true,
+    },
+    experienceLevel: {
+      type: Number,
       required: true,
     },
     positions: {

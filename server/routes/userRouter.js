@@ -5,12 +5,13 @@ const {
   userLogout,
   updateProfile,
 } = require("../controllers/userController");
+const validateJwtToken = require("../middlewares/authentication");
 
 const userRouter = express.Router();
 
 userRouter.post("/signup", userSignup);
 userRouter.post("/login", userLogin);
 userRouter.post("/logout", userLogout);
-userRouter.post("/updateProfile", updateProfile);
+userRouter.post("/updateProfile", validateJwtToken, updateProfile);
 
 module.exports = userRouter;

@@ -1,4 +1,3 @@
-import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./pages/Home";
 import Job from "./pages/Job";
@@ -47,9 +46,9 @@ const appRouter = createBrowserRouter([
 
 function App() {
   return (
-    <>
+    <div className="md:ml-10 md:mr-10 ml-5 mr-5">
       <RouterProvider router={appRouter} />
-    </>
+    </div>
   );
 }
 

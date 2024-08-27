@@ -6,7 +6,7 @@ const Navbar = () => {
   const user = false;
   return (
     <div className="bg-white">
-      <div className="flex items-center justify-between mx-auto h-16 mr-10 ml-10">
+      <div className="flex items-center justify-between mx-auto h-16">
         <div>
           <h1 className="text-2xl font-bold cursor-pointer">
             Job<span className="text-[#F83002]">Portal</span>
@@ -15,7 +15,9 @@ const Navbar = () => {
         <div className="flex items-center gap-2">
           <ul className="flex font-medium items-center gap-5 cursor-pointer">
             <li>Home</li>
-            <li>Jobs</li>
+            <Link to="/jobs">
+              <li>Jobs</li>
+            </Link>
             <li>Jobs</li>
           </ul>
           {user ? (

@@ -1,9 +1,28 @@
-import { Card, Form, Input, Select, Typography } from "antd";
-import { Link } from "react-router-dom";
+import { Card, Form, Input, Select, Typography, message } from "antd";
+import { Link, useNavigate } from "react-router-dom";
+import { loginUser } from "../apiCalls/user";
+import { useMutation } from "@tanstack/react-query";
 
 const Login = () => {
+  const navigate = useNavigate();
+
+  const mutation = useMutation({
+    mutationFn: loginUser,
+    onSuccess: (data) => {
+      if (data.success) {
+        message.success(data.message);
+        navigate("/");
+      } else {
+        message.error(data.message);
+      }
+    },
+    onError: (error) => {
+      message.error(error.message);
+    },
+  });
+
   const onFinish = (values) => {
-    console.log(values);
+    mutation.mutate(values);
   };
 
   return (

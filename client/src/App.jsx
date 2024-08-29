@@ -1,52 +1,36 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./pages/Home";
-import Job from "./pages/Job";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import Navbar from "./components/Navbar";
+import Jobs from "./pages/Jobs";
+import Browse from "./pages/Browse";
+import Profile from "./pages/Profile";
+import JobDescription from "./pages/JobDescription";
 
 const appRouter = createBrowserRouter([
   {
     path: "/",
-    element: (
-      <>
-        <Navbar />
-        <Home />
-      </>
-    ),
+    element: <Home />,
   },
   {
     path: "/jobs",
-    element: (
-      <>
-        <Navbar />
-        <Job />
-      </>
-    ),
+    element: <Jobs />,
   },
   {
-    path: "/login",
-    element: (
-      <>
-        <Navbar />
-        <Login />
-      </>
-    ),
+    path: "/jobs/:id",
+    element: <JobDescription />,
   },
   {
-    path: "/signup",
-    element: (
-      <>
-        <Navbar />
-        <Signup />
-      </>
-    ),
+    path: "/browse",
+    element: <Browse />,
+  },
+  {
+    path: "/profile",
+    element: <Profile />,
   },
 ]);
 
 function App() {
   return (
-    <div className="md:ml-10 md:mr-10 ml-5 mr-5">
+    <div>
       <RouterProvider router={appRouter} />
     </div>
   );

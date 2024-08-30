@@ -31,3 +31,12 @@ export const getUser = async (payload) => {
     return error.response.data;
   }
 };
+
+export const updateProfile = async (payload) => {
+  try {
+    const response = await axiosInstance.post("/user/updateProfile", payload);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};

@@ -12,6 +12,6 @@ const jobRouter = express.Router();
 jobRouter.post("/add", validateJwtToken, addJob);
 jobRouter.get("/getAllJobs", getAllJobs);
 jobRouter.get("/getAdminJobs", validateJwtToken, getAdminJobs);
-jobRouter.get("/:id", validateJwtToken, getJobById);
+jobRouter.get("/:id", getJobById);
 
 module.exports = jobRouter;

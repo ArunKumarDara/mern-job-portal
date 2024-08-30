@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar";
 import { Drawer, Tag, Upload, message } from "antd";
 import {
   EditOutlined,
-  ContactsOutlined,
+  PhoneOutlined,
   FileDoneOutlined,
   PlusOutlined,
   LoadingOutlined,
@@ -137,7 +137,7 @@ const Profile = () => {
               <span>{userData?.data?.email}</span>
             </div>
             <div className="flex items-center gap-3 my-2">
-              <ContactsOutlined />
+              <PhoneOutlined />
               <span>{userData?.data?.phoneNumber}</span>
             </div>
           </div>

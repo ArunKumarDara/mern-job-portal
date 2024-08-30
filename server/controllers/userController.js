@@ -2,6 +2,14 @@ const mongoose = require("mongoose");
 const userModel = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const cloudinary = require("cloudinary").v2;
+const fs = require("fs");
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const userSignup = async (req, res) => {
   try {
@@ -76,12 +84,13 @@ const userLogin = async (req, res) => {
       .status(200)
       .cookie("token", token, {
         maxAge: 1 * 24 * 60 * 60 * 1000,
-        httpsOnly: true,
+        httpOnly: true,
         sameSite: "strict",
       })
       .json({
         message: `Welcome back ${userExist.fullName}`,
         success: true,
+        user: userExist,
       });
   } catch (error) {
     res
@@ -138,9 +147,64 @@ const updateProfile = async (req, res) => {
   }
 };
 
+const uploadProfilePic = async (req, res) => {
+  try {
+    const uploadResult = await cloudinary.uploader.upload(req.file.path);
+    fs.unlink(req.file.path, (err) => {
+      if (err) console.log(err);
+    });
+    const userId = req.id;
+    let response = await userModel.findByIdAndUpdate(
+      userId,
+      {
+        "profile.profilePhoto": uploadResult.secure_url,
+      },
+      { new: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Profile picture uploaded successfully",
+      data: response,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const getCurrentUser = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    console.log(userId);
+    console.log(req.body);
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "User fetched successfully",
+      data: user,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   userSignup,
   userLogin,
   userLogout,
   updateProfile,
+  uploadProfilePic,
+  getCurrentUser,
 };

@@ -3,11 +3,9 @@ const { v4: uuidv4 } = require("uuid");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    console.log(file);
     cb(null, "./uploads");
   },
   filename: function (req, file, cb) {
-    console.log(file);
     const random = uuidv4();
     cb(null, random + "" + file.originalname);
   },

@@ -8,3 +8,12 @@ export const getLatestJobs = async () => {
     return error.response.data;
   }
 };
+
+export const getJob = async (jobId) => {
+  try {
+    const response = await axiosInstance.get(`/job/${jobId}`);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};

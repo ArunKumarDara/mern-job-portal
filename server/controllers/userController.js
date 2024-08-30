@@ -112,8 +112,8 @@ const userLogout = async (req, res) => {
 
 const updateProfile = async (req, res) => {
   try {
-    const { fullName, email, phoneNumber, bio, skills } = req.body;
-    if (!fullName || !email || !phoneNumber || !bio || skills) {
+    const { fullName, email, phoneNumber, bio, skills, company } = req.body;
+    if (!fullName || !email || !phoneNumber || !bio || !skills || !company) {
       return res
         .status(400)
         .json({ success: false, message: "some fields are missing" });
@@ -127,11 +127,13 @@ const updateProfile = async (req, res) => {
         message: "User not found",
       });
     }
-    (user.fullName = fullName),
-      (user.email = email),
-      (user.phoneNumber = phoneNumber),
-      (user.profile.bio = bio),
-      (user.profile.skills = skillsArray);
+
+    user.fullName = fullName;
+    user.email = email;
+    user.phoneNumber = phoneNumber;
+    user.profile.bio = bio;
+    user.profile.skills = skillsArray;
+    user.profile.company = company;
 
     await user.save();
     return res.status(200).json({
@@ -178,9 +180,7 @@ const uploadProfilePic = async (req, res) => {
 const getCurrentUser = async (req, res) => {
   try {
     const { userId } = req.body;
-    console.log(userId);
-    console.log(req.body);
-    const user = await userModel.findById(userId);
+    const user = await userModel.findById(userId).populate("profile.company");
     if (!user) {
       return res.status(404).json({
         success: false,

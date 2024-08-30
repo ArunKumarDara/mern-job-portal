@@ -62,9 +62,6 @@ const UpdateProfile = ({ setOpen }) => {
   if (userError || companyError)
     return <div>Error: {userError.message || companyError.message}</div>;
 
-  console.log(companies);
-  console.log(userData);
-
   return (
     <>
       <Form

@@ -15,8 +15,8 @@ const HeroSection = () => {
           <span className="text-[#6A38C2]"> Dream Jobs</span>
         </h1>
         <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla,
-          quisquam optio laborum dignissimos iusto iste.
+          Search for opportunities, apply with confidence, and take the next
+          step towards your dream career. Your perfect job is just a click away.
         </p>
         <div className="flex justify-center">
           <Search

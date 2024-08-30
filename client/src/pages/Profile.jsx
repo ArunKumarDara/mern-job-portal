@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import Navbar from "../components/Navbar";
-import { Badge, Button, Drawer, Upload, message } from "antd";
+import { Badge, Drawer, Upload, message } from "antd";
 import {
   EditOutlined,
   ContactsOutlined,
@@ -92,7 +92,7 @@ const Profile = () => {
       <Navbar />
       <div className="bg-gray-100 md:pt-16 md:pl-12 md:pr-12 pt-16 pl-6 pr-6">
         <div className="max-w-4xl mx-auto bg-white border border-gray-200 rounded-2xl p-5 mt-4">
-          <div className="flex justify-between">
+          <div className="flex justify-between items-center">
             <div className="flex justify-start items-center gap-3">
               <div className="flex justify-center items-center">
                 <Upload
@@ -125,9 +125,12 @@ const Profile = () => {
                 <p>{userData?.data?.profile?.bio}</p>
               </div>
             </div>
-            <Button onClick={() => setOpen(true)} size="small">
-              <EditOutlined />
-            </Button>
+            <div
+              className="rounded-full border border-gray-200 flex justify-center items-center"
+              onClick={() => setOpen(true)}
+            >
+              <EditOutlined size="small" className="p-2 cursor-pointer" />
+            </div>
           </div>
           <div className="my-5">
             <div className="flex items-center gap-3 my-2">

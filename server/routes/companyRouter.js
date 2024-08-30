@@ -2,14 +2,16 @@ const express = require("express");
 const {
   updateCompany,
   registerCompany,
-  getCompanies,
   getCompanyById,
+  getAllCompanies,
+  getCompaniesByUser,
 } = require("../controllers/companyController");
 const validateJwtToken = require("../middlewares/authentication");
 const companyRouter = express.Router();
 
 companyRouter.post("/register", validateJwtToken, registerCompany);
-companyRouter.get("/getCompanies", validateJwtToken, getCompanies);
+companyRouter.get("/getAllCompanies", validateJwtToken, getAllCompanies);
+companyRouter.get("/getCompaniesByUser", validateJwtToken, getCompaniesByUser);
 companyRouter.get("/:id", validateJwtToken, getCompanyById);
 companyRouter.post("/update/:id", validateJwtToken, updateCompany);
 

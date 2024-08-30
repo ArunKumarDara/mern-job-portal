@@ -13,6 +13,7 @@ import AppliedJobTable from "./AppliedJobs";
 import UpdateProfile from "./UpdateProfile";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUser, uploadProfilePhoto } from "../apiCalls/user";
+import Loading from "../components/Loading";
 const isResume = true;
 
 const Profile = () => {
@@ -82,7 +83,7 @@ const Profile = () => {
     </button>
   );
 
-  if (isLoading) return <LoadingOutlined style={{ fontSize: 24 }} />;
+  if (isLoading) return <Loading />;
   if (error) return <div>Error: {error.message}</div>;
 
   console.log(userData);

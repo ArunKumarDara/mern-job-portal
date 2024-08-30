@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import Navbar from "../components/Navbar";
-import { Badge, Drawer, Upload, message } from "antd";
+import { Drawer, Tag, Upload, message } from "antd";
 import {
   EditOutlined,
   ContactsOutlined,
@@ -86,8 +86,6 @@ const Profile = () => {
   if (isLoading) return <Loading />;
   if (error) return <div>Error: {error.message}</div>;
 
-  console.log(userData);
-
   return (
     <>
       <Navbar />
@@ -127,7 +125,7 @@ const Profile = () => {
               </div>
             </div>
             <div
-              className="rounded-full border border-gray-200 flex justify-center items-center"
+              className="rounded-full border border-gray-200 flex justify-center items-center hover:bg-gray-200"
               onClick={() => setOpen(true)}
             >
               <EditOutlined size="small" className="p-2 cursor-pointer" />
@@ -144,11 +142,13 @@ const Profile = () => {
             </div>
           </div>
           <div className="my-5">
-            <h1>Skills</h1>
+            <h1 className="font-medium mb-2">Skills</h1>
             <div className="flex items-center gap-1">
               {userData?.data?.profile?.skills.length !== 0 ? (
                 userData?.data?.profile?.skills.map((item, index) => (
-                  <Badge key={index}>{item}</Badge>
+                  <Tag key={index} color="purple">
+                    {item}
+                  </Tag>
                 ))
               ) : (
                 <span>NA</span>

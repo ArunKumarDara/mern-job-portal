@@ -31,7 +31,29 @@ const registerCompany = async (req, res) => {
   }
 };
 
-const getCompanies = async (req, res) => {
+const getAllCompanies = async (req, res) => {
+  try {
+    const companies = await companyModel.find();
+    if (!companies) {
+      return res.status(404).json({
+        message: "No companies found",
+        success: false,
+      });
+    }
+    return res.status(200).json({
+      message: "Companies fetched successfully",
+      success: true,
+      data: companies,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      message: error.message,
+      success: false,
+    });
+  }
+};
+
+const getCompaniesByUser = async (req, res) => {
   try {
     const userId = req.id;
     const companies = await companyModel.find({ createdBy: userId });
@@ -106,7 +128,8 @@ const updateCompany = async (req, res) => {
 
 module.exports = {
   registerCompany,
-  getCompanies,
+  getCompaniesByUser,
   getCompanyById,
   updateCompany,
+  getAllCompanies,
 };

@@ -1,17 +1,24 @@
-import { Card, List, Tag } from "antd";
+import { Card, List, Tag, notification } from "antd";
 import { useQuery } from "@tanstack/react-query";
 import { getLatestJobs } from "../apiCalls/job";
 import {
   PushpinOutlined,
   EnvironmentOutlined,
   HomeOutlined,
+  PushpinFilled,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import Loading from "../components/Loading";
 import moment from "moment";
+import { useSelector, useDispatch } from "react-redux";
+import { addToList, removeFromList } from "../store/watchListSlice";
 
 const LatestJobs = () => {
   const navigate = useNavigate();
+  const { user } = useSelector((state) => state.users);
+  const { watchList } = useSelector((state) => state.watchList);
+  const [api, contextHolder] = notification.useNotification();
+  const dispatch = useDispatch();
   const {
     data: latestJobs,
     error,
@@ -22,6 +29,23 @@ const LatestJobs = () => {
   });
 
   if (error) return <p>Error fetching latest jobs: {error.message}</p>;
+
+  const handleWatchList = (job) => {
+    if (watchList.some((item) => item._id === job._id)) {
+      dispatch(removeFromList(job));
+    } else {
+      dispatch(addToList(job));
+    }
+  };
+
+  const openNotification = (placement) => {
+    api.error({
+      message: "Login Required",
+      description:
+        "Please log in to add jobs to your watchlist and keep track of your favorite opportunities.",
+      placement,
+    });
+  };
 
   const now = moment();
 
@@ -43,7 +67,7 @@ const LatestJobs = () => {
             xl: 2,
             xxl: 3,
           }}
-          dataSource={latestJobs.data.slice(0, 6)}
+          dataSource={latestJobs.data}
           renderItem={(job) => (
             <List.Item>
               <Card
@@ -54,7 +78,7 @@ const LatestJobs = () => {
                 <div className="flex justify-between items-start">
                   <div>
                     <h1 className="font-medium text-lg">{job.title}</h1>
-                    <p className="text-sm">
+                    <p className="text-sm mb-2">
                       <HomeOutlined className="mr-2" />
                       {job.company.name}
                     </p>
@@ -65,9 +89,26 @@ const LatestJobs = () => {
                       <span> {moment(job.createdAt).from(now)}</span>
                     </p>
                   </div>
-                  <div className="rounded-full border border-gray-200 hover:bg-gray-200">
-                    <PushpinOutlined size="large" className="p-2" />
-                  </div>
+                  <>
+                    {contextHolder}
+                    <div
+                      className="rounded-full border border-gray-200 hover:bg-gray-200"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        {
+                          !user
+                            ? openNotification("topRight")
+                            : handleWatchList(job);
+                        }
+                      }}
+                    >
+                      {watchList.some((item) => item._id === job._id) ? (
+                        <PushpinFilled size="large" className="p-2" />
+                      ) : (
+                        <PushpinOutlined size="large" className="p-2" />
+                      )}
+                    </div>
+                  </>
                 </div>
                 <div className="flex justify-start items-center gap-2 mt-3">
                   <Tag color="purple">{`${job.salary} LPA`}</Tag>

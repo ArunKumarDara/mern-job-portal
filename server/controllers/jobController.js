@@ -54,7 +54,10 @@ const addJob = async (req, res) => {
 
 const getAllJobs = async (req, res) => {
   try {
+    const page = req.query.page;
     const keyword = req.query.keyword || "";
+    const limit = req.query.limit;
+    const skip = parseInt(page) * parseInt(limit);
     const query = {
       $or: [
         { title: { $regex: keyword, $options: "i" } },
@@ -64,7 +67,28 @@ const getAllJobs = async (req, res) => {
     const jobs = await jobModel
       .find(query)
       .populate("company")
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+    return res.status(200).json({
+      success: true,
+      message: "jobs fetched successfully",
+      data: jobs,
+      nextPage: parseInt(page) + 1,
+    });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+const getLatestJobs = async (req, res) => {
+  try {
+    const limit = req.query.limit;
+    const jobs = await jobModel
+      .find()
+      .populate("company")
+      .sort({ createdAt: -1 })
+      .limit(limit);
     return res.status(200).json({
       success: true,
       message: "jobs fetched successfully",
@@ -117,4 +141,5 @@ module.exports = {
   getAllJobs,
   getJobById,
   getAdminJobs,
+  getLatestJobs,
 };

@@ -17,7 +17,7 @@ const Login = ({ setLoginDrawer }) => {
       if (data.success) {
         setLoginDrawer(false);
         message.success(data.message);
-        dispatch(setUser(data.user));
+        dispatch(setUser(data.user._id));
         navigate("/");
       } else {
         message.error(data.message);

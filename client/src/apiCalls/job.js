@@ -1,8 +1,10 @@
 import axiosInstance from ".";
 
-export const getLatestJobs = async () => {
+export const getLatestJobs = async (search) => {
   try {
-    const response = await axiosInstance.get(`/job/latestJobs?limit=6`);
+    const response = await axiosInstance.get(
+      `/job/latestJobs?search=${search}&limit=6`
+    );
     return response.data;
   } catch (error) {
     return error.response.data;
@@ -11,7 +13,6 @@ export const getLatestJobs = async () => {
 
 export const getJobs = async ({ pageParam }) => {
   try {
-    console.log(pageParam);
     const response = await axiosInstance.get(
       `/job/getAllJobs?page=${pageParam}&limit=10`
     );

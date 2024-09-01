@@ -55,17 +55,10 @@ const addJob = async (req, res) => {
 const getAllJobs = async (req, res) => {
   try {
     const page = req.query.page;
-    const keyword = req.query.keyword || "";
     const limit = req.query.limit;
     const skip = parseInt(page) * parseInt(limit);
-    const query = {
-      $or: [
-        { title: { $regex: keyword, $options: "i" } },
-        { description: { $regex: keyword, $options: "i" } },
-      ],
-    };
     const jobs = await jobModel
-      .find(query)
+      .find()
       .populate("company")
       .sort({ createdAt: -1 })
       .skip(skip)
@@ -83,9 +76,16 @@ const getAllJobs = async (req, res) => {
 
 const getLatestJobs = async (req, res) => {
   try {
+    const search = req.query.search;
     const limit = req.query.limit;
+    const query = {
+      $or: [
+        { title: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+      ],
+    };
     const jobs = await jobModel
-      .find()
+      .find(query)
       .populate("company")
       .sort({ createdAt: -1 })
       .limit(limit);

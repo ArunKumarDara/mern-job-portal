@@ -1,29 +1,15 @@
+/* eslint-disable react/prop-types */
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Form, Input, message, Select } from "antd";
-import { useSelector } from "react-redux";
 import { updateProfile } from "../apiCalls/user";
 import { getAllCompanies } from "../apiCalls/company";
 import Loading from "../components/Loading";
 import { useState } from "react";
-import { getUser } from "../apiCalls/user";
 
-// eslint-disable-next-line react/prop-types
-const UpdateProfile = ({ setOpen }) => {
-  const { user } = useSelector((state) => state.users);
+const UpdateProfile = ({ setOpen, userData }) => {
   const queryClient = useQueryClient();
   const [searchValue, setSearchValue] = useState("");
-  const [selectedCompany, setSelectedCompany] = useState(
-    user?.profile.company || ""
-  );
-
-  const {
-    data: userData,
-    error: userError,
-    isLoading: userLoading,
-  } = useQuery({
-    queryKey: ["user"],
-    queryFn: () => getUser({ userId: user?._id }),
-  });
+  const [selectedCompany, setSelectedCompany] = useState("");
 
   const {
     data: companies,
@@ -47,7 +33,7 @@ const UpdateProfile = ({ setOpen }) => {
   });
 
   const onFinish = (values) => {
-    mutateProfile({ ...values, company: selectedCompany });
+    mutateProfile(values);
   };
 
   const handleSearch = (value) => {
@@ -58,18 +44,18 @@ const UpdateProfile = ({ setOpen }) => {
     setSelectedCompany(value);
   };
 
-  if (userLoading || companiesLoading) return <Loading />;
-  if (userError || companyError)
-    return <div>Error: {userError.message || companyError.message}</div>;
+  if (companiesLoading) return <Loading />;
+  if (companyError) return <div>Error: {companyError.message}</div>;
 
   return (
     <>
       <Form
         layout="vertical"
         initialValues={{
-          ...userData.data,
-          bio: userData.data.profile.bio,
-          skills: userData.data.profile.skills,
+          ...userData,
+          bio: userData.profile?.bio,
+          skills: userData.profile?.skills,
+          company: userData.profile?.company?.name,
         }}
         onFinish={onFinish}
       >
@@ -91,8 +77,7 @@ const UpdateProfile = ({ setOpen }) => {
         <Form.Item label="Current Company" name="company">
           <Select
             showSearch
-            value={searchValue}
-            defaultValue={userData.data.profile.company.name}
+            value={selectedCompany}
             placeholder="Search Your Company"
             size="large"
             defaultActiveFirstOption={false}

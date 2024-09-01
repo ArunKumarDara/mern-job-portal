@@ -27,8 +27,9 @@ const Profile = () => {
     error,
     isLoading,
   } = useQuery({
-    queryKey: ["user"],
-    queryFn: () => getUser({ userId: user?._id }),
+    queryKey: ["user", user],
+    queryFn: () => getUser({ userId: user }),
+    enabled: !!user,
   });
 
   const { mutate: uploadPhoto } = useMutation({
@@ -181,7 +182,7 @@ const Profile = () => {
           onClose={() => setOpen(false)}
           title="Update Profile"
         >
-          <UpdateProfile setOpen={setOpen} />
+          <UpdateProfile setOpen={setOpen} userData={userData.data} />
         </Drawer>
       )}
     </>

@@ -1,4 +1,4 @@
-import { Card, List, Tag, notification } from "antd";
+import { Card, List, Tag, notification, Input } from "antd";
 import { useQuery } from "@tanstack/react-query";
 import { getLatestJobs } from "../apiCalls/job";
 import {
@@ -12,20 +12,32 @@ import Loading from "../components/Loading";
 import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
 import { addToList, removeFromList } from "../store/watchListSlice";
+import { useState } from "react";
+
+const { Search } = Input;
+
+const items = [
+  "Fullstack Developer",
+  "Backend Developer",
+  "Frontend Developer",
+  "Data Scientist",
+];
 
 const LatestJobs = () => {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.users);
   const { watchList } = useSelector((state) => state.watchList);
   const [api, contextHolder] = notification.useNotification();
+  const [search, setSearch] = useState("");
   const dispatch = useDispatch();
   const {
     data: latestJobs,
     error,
     isLoading,
+    refetch,
   } = useQuery({
-    queryKey: ["latestJobs"],
-    queryFn: getLatestJobs,
+    queryKey: ["latestJobs", search],
+    queryFn: () => getLatestJobs(search),
   });
 
   if (error) return <p>Error fetching latest jobs: {error.message}</p>;
@@ -49,8 +61,36 @@ const LatestJobs = () => {
 
   const now = moment();
 
+  const onSearch = (value) => {
+    setSearch(value);
+    refetch();
+  };
+
   return (
     <div>
+      <div className="flex justify-center mt-4">
+        <Search
+          value={search}
+          allowClear
+          className="w-full md:w-[40vw]"
+          placeholder="Search Jobs here!!"
+          onSearch={onSearch}
+          onChange={(e) => setSearch(e.target.value)}
+          enterButton
+          size="large"
+        />
+      </div>
+      <div className="flex justify-center items-center gap-5 mt-3">
+        {items.map((item) => (
+          <div
+            onClick={() => setSearch(item)}
+            key={item}
+            className="cursor-pointer rounded-full bg-sky-50 border border-sky-50 dark:text-sky-300 px-2  py-0.5"
+          >
+            {item}
+          </div>
+        ))}
+      </div>
       <h1 className="text-xl md:text-2xl font-bold mt-5 mb-5">
         Latest & Top<span className="text-[#6A38C2]"> Job Openings</span>
       </h1>

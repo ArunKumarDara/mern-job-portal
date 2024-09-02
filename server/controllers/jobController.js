@@ -56,9 +56,33 @@ const getAllJobs = async (req, res) => {
   try {
     const page = req.query.page;
     const limit = req.query.limit;
+    const location = req.query.location;
+    const role = req.query.role;
+    const experience = req.query.experience
+      ? JSON.parse(req.query.experience)
+      : undefined;
+    const salaryRange = req.query.salary
+      ? JSON.parse(req.query.salary)
+      : undefined;
     const skip = parseInt(page) * parseInt(limit);
+    const query = {};
+    if (location) {
+      query.location = { $regex: location, $options: "i" };
+    }
+    if (role) {
+      query.$or = [
+        { title: { $regex: role, $options: "i" } },
+        { description: { $regex: role, $options: "i" } },
+      ];
+    }
+    if (experience && Array.isArray(experience)) {
+      query.experienceLevel = { $gte: experience[0], $lte: experience[1] };
+    }
+    if (salaryRange && Array.isArray(salaryRange)) {
+      query.salary = { $gte: salaryRange[0], $lte: salaryRange[1] };
+    }
     const jobs = await jobModel
-      .find()
+      .find(query)
       .populate("company")
       .sort({ createdAt: -1 })
       .skip(skip)

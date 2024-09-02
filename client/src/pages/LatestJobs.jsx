@@ -95,7 +95,9 @@ const LatestJobs = () => {
         Latest & Top<span className="text-[#6A38C2]"> Job Openings</span>
       </h1>
       {isLoading ? (
-        <Spin indicator={<LoadingOutlined spin />} />
+        <div className="w-full flex justify-center items-center">
+          <Spin indicator={<LoadingOutlined spin />} />
+        </div>
       ) : (
         <List
           grid={{

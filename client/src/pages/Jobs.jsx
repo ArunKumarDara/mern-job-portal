@@ -1,4 +1,15 @@
-import { Card, List, notification, Tag, Button, Spin } from "antd";
+import {
+  Card,
+  List,
+  notification,
+  Tag,
+  Button,
+  Spin,
+  Drawer,
+  Form,
+  Radio,
+  Select,
+} from "antd";
 import {
   HomeOutlined,
   EnvironmentOutlined,
@@ -16,11 +27,15 @@ import { addToList, removeFromList } from "../store/watchListSlice";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getJobs } from "../apiCalls/job";
 import Footer from "./Footer";
+import { useState } from "react";
 
 const Jobs = () => {
   const { user } = useSelector((state) => state.users);
   const { watchList } = useSelector((state) => state.watchList);
+  const [form] = Form.useForm();
   const [api, contextHolder] = notification.useNotification();
+  const [filter, setFilter] = useState(false);
+  const [filterValues, setFilterValues] = useState({});
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -32,8 +47,9 @@ const Jobs = () => {
     isFetching,
     isFetchingNextPage,
     status,
+    refetch,
   } = useInfiniteQuery({
-    queryKey: ["jobs"],
+    queryKey: ["jobs", filterValues],
     queryFn: getJobs,
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {
@@ -66,6 +82,26 @@ const Jobs = () => {
 
   const now = moment();
   const allJobs = jobs?.pages.flatMap((page) => page.data) || [];
+
+  const onFinish = (values) => {
+    setFilter(false);
+    if (values.salaryRange) {
+      values.salaryRange = JSON.stringify(values.salaryRange);
+    }
+    if (values.experience) {
+      values.experience = JSON.stringify(values.experience);
+    }
+    setFilterValues(values);
+    refetch();
+  };
+
+  const handleClearFilter = () => {
+    setFilter(false);
+    form.resetFields();
+    setFilterValues({});
+    refetch();
+  };
+
   return (
     <div>
       <Navbar />
@@ -81,10 +117,14 @@ const Jobs = () => {
                 />
                 <h1 className="font-semibold text-lg">Jobs</h1>
               </div>
-              <Button icon={<FilterOutlined />}>Filter</Button>
+              <Button icon={<FilterOutlined />} onClick={() => setFilter(true)}>
+                Filter
+              </Button>
             </div>
             {status === "pending" ? (
-              <Spin indicator={<LoadingOutlined spin />} />
+              <div className="w-full flex justify-center items-center">
+                <Spin indicator={<LoadingOutlined spin />} />
+              </div>
             ) : (
               <List
                 grid={{
@@ -166,6 +206,84 @@ const Jobs = () => {
         <div>{isFetching && !isFetchingNextPage && "Fetching..."}</div>
         <Footer />
       </div>
+      {filter && (
+        <Drawer
+          title="Filter Job Preference"
+          open={filter}
+          onClose={() => setFilter(false)}
+        >
+          <Form
+            layout="vertical"
+            onFinish={onFinish}
+            initialValues={filterValues}
+          >
+            <Form.Item label="Location" name="location">
+              <Select size="large" allowClear>
+                {["Delhi", "Bangalore", "Hyderabad", "Mumbai", "Chennai"].map(
+                  (city) => (
+                    <Select.Option key={city} value={city}>
+                      {city}
+                    </Select.Option>
+                  )
+                )}
+              </Select>
+            </Form.Item>
+            <Form.Item label="Role" name="role">
+              <Select size="large" allowClear>
+                {[
+                  "Frontend Developer",
+                  "Backend Developer",
+                  "Full Stack Developer",
+                  "Data Scientist",
+                ].map((role) => (
+                  <Select.Option key={role} value={role}>
+                    {role}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+            <Form.Item label="Salary(LPA)" name="salaryRange">
+              <Radio.Group
+                size="large"
+                className="flex flex-col justify-start items-start gap-1"
+              >
+                <Radio value={[3, 5]}> 3 - 5 </Radio>
+                <Radio value={[5, 10]}> 5 - 10 </Radio>
+                <Radio value={[10]}> 10+ </Radio>
+              </Radio.Group>
+            </Form.Item>
+            <Form.Item label="Experience" name="experience">
+              <Radio.Group
+                size="large"
+                className="flex flex-col justify-start items-start gap-1"
+              >
+                <Radio value={[0, 1]}>Fresher</Radio>
+                <Radio value={[1, 3]}>1 to 3 Years</Radio>
+                <Radio value={[3, 10]}> 3+ Years </Radio>
+              </Radio.Group>
+            </Form.Item>
+            <Form.Item>
+              <div>
+                <button
+                  type="submit"
+                  className="w-full font-semibold text-white bg-[#6A38C2] rounded-md mb-3 p-3 hover:shadow-md"
+                >
+                  FILTER
+                </button>
+              </div>
+              <div>
+                <button
+                  type="button"
+                  onClick={handleClearFilter}
+                  className="w-full font-semibold text-red-500 border border-red-500 rounded-md mb-3 p-3 hover:shadow-md"
+                >
+                  CLEAR FILTER
+                </button>
+              </div>
+            </Form.Item>
+          </Form>
+        </Drawer>
+      )}
     </div>
   );
 };

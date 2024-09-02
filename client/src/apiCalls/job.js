@@ -11,10 +11,13 @@ export const getLatestJobs = async (search) => {
   }
 };
 
-export const getJobs = async ({ pageParam }) => {
+export const getJobs = async ({ pageParam, queryKey }) => {
   try {
+    const { experience, location, role, salaryRange } = queryKey[1];
     const response = await axiosInstance.get(
-      `/job/getAllJobs?page=${pageParam}&limit=10`
+      `/job/getAllJobs?page=${pageParam}&limit=10&role=${role || ""}&location=${
+        location || ""
+      }&experience=${experience || ""}&salary=${salaryRange || ""}`
     );
     return response.data;
   } catch (error) {

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import Navbar from "../components/Navbar";
-import { Drawer, Tag, Upload, message } from "antd";
+import { Drawer, Tag, Upload, message, Avatar } from "antd";
 import {
   EditOutlined,
   PhoneOutlined,
@@ -132,19 +132,30 @@ const Profile = () => {
               <EditOutlined size="small" className="p-2 cursor-pointer" />
             </div>
           </div>
-          <div className="my-5">
-            <div className="flex items-center gap-3 my-2">
-              <FileDoneOutlined />
-              <span>{userData?.data?.email}</span>
+          <div className="my-5 flex justify-between items-start">
+            <div>
+              <div className="flex items-center gap-3 my-2">
+                <FileDoneOutlined />
+                <span>{userData?.data?.email}</span>
+              </div>
+              <div className="flex items-center gap-3 my-2">
+                <PhoneOutlined />
+                <span>{userData?.data?.phoneNumber}</span>
+              </div>
             </div>
-            <div className="flex items-center gap-3 my-2">
-              <PhoneOutlined />
-              <span>{userData?.data?.phoneNumber}</span>
+            <div className="flex justify-start items-center gap-1">
+              <Avatar
+                shape="square"
+                src="https://st3.depositphotos.com/43745012/44906/i/450/depositphotos_449066958-stock-photo-financial-accounting-logo-financial-logo.jpg"
+              />
+              <h1 className="text-sm font-medium">
+                {userData?.data?.profile?.company?.name}
+              </h1>
             </div>
           </div>
           <div className="my-5">
             <h1 className="font-medium mb-2">Skills</h1>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 flex-wrap justify-start w-full">
               {userData?.data?.profile?.skills.length !== 0 ? (
                 userData?.data?.profile?.skills.map((item, index) => (
                   <Tag key={index} color="purple">

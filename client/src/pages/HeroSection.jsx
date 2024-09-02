@@ -1,9 +1,4 @@
-import { Input } from "antd";
-const { Search } = Input;
-
 const HeroSection = () => {
-  const onSearch = (value, _e, info) => console.log(info?.source, value);
-
   return (
     <div className="text-center pt-5">
       <div className="flex flex-col gap-5">
@@ -18,15 +13,6 @@ const HeroSection = () => {
           Search for opportunities, apply with confidence, and take the next
           step towards your dream career. Your perfect job is just a click away.
         </p>
-        <div className="flex justify-center">
-          <Search
-            className="w-full md:w-[40vw]"
-            placeholder="input search text"
-            onSearch={onSearch}
-            enterButton
-            size="large"
-          />
-        </div>
       </div>
     </div>
   );

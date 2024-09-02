@@ -54,8 +54,8 @@ const UpdateProfile = ({ setOpen, userData }) => {
         initialValues={{
           ...userData,
           bio: userData.profile?.bio,
-          skills: userData.profile?.skills,
-          company: userData.profile?.company?.name,
+          skills: userData.profile?.skills.join(","),
+          company: selectedCompany,
         }}
         onFinish={onFinish}
       >

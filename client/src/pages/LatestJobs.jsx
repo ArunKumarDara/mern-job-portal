@@ -1,4 +1,4 @@
-import { Card, List, Tag, notification, Input } from "antd";
+import { Card, List, Tag, notification, Input, Spin } from "antd";
 import { useQuery } from "@tanstack/react-query";
 import { getLatestJobs } from "../apiCalls/job";
 import {
@@ -6,9 +6,9 @@ import {
   EnvironmentOutlined,
   HomeOutlined,
   PushpinFilled,
+  LoadingOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import Loading from "../components/Loading";
 import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
 import { addToList, removeFromList } from "../store/watchListSlice";
@@ -95,7 +95,7 @@ const LatestJobs = () => {
         Latest & Top<span className="text-[#6A38C2]"> Job Openings</span>
       </h1>
       {isLoading ? (
-        <Loading />
+        <Spin indicator={<LoadingOutlined spin />} />
       ) : (
         <List
           grid={{

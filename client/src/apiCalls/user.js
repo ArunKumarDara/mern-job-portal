@@ -40,3 +40,12 @@ export const updateProfile = async (payload) => {
     return error.response.data;
   }
 };
+
+export const logoutUser = async () => {
+  try {
+    const response = await axiosInstance.get("/user/logout");
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};

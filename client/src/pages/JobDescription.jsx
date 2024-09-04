@@ -1,37 +1,49 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Avatar, Card, Descriptions, Divider, message, Tag } from "antd";
 import Navbar from "../components/Navbar";
 import Footer from "./Footer";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getJob } from "../apiCalls/job";
 import Loading from "../components/Loading";
-import { EnvironmentOutlined } from "@ant-design/icons";
+import { EnvironmentOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 import moment from "moment";
+import { useSelector } from "react-redux";
+import { applyJob } from "../apiCalls/application";
 
 const JobDescription = () => {
-  //   const { user } = useSelector((store) => store.auth);
-  //   const isIntiallyApplied =
-  //     singleJob?.applications?.some(
-  //       (application) => application.applicant === user?._id
-  //     ) || false;
-  //   const [isApplied, setIsApplied] = useState(isIntiallyApplied);
-
+  const { user } = useSelector((state) => state.users);
+  const queryClient = useQueryClient();
   const params = useParams();
+  const navigate = useNavigate();
   const jobId = params.id;
-  const isApplied = false;
 
   const {
     data: job,
     error,
     isLoading,
+    refetch,
   } = useQuery({
     queryKey: ["job"],
     queryFn: () => getJob(jobId),
   });
 
-  if (error) return message.error(error.message);
+  const { mutate: mutateJob } = useMutation({
+    mutationFn: applyJob,
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({ queryKey: ["jobs", "job"] });
+      refetch();
+      message.success(response.message);
+    },
+    onError: (error) => {
+      message.error(error.message);
+    },
+  });
 
-  console.log(job);
+  const handleApplyJob = () => {
+    mutateJob({ job: jobId, applicant: user.id });
+  };
+
+  if (error) return message.error(error.message);
 
   const now = moment();
   const createdDate = moment(job?.data?.createdAt);
@@ -99,6 +111,14 @@ const JobDescription = () => {
       <Navbar />
       <div className="bg-gray-100 md:pt-24 pt-20">
         <div className="max-w-4xl mx-auto">
+          <div className="flex justify-start items-center mb-4 gap-3">
+            <ArrowLeftOutlined
+              className="cursor-pointer"
+              size="large"
+              onClick={() => navigate(-1)}
+            />
+            <h1 className="font-semibold text-lg">Job Description</h1>
+          </div>
           <Card className="mb-4">
             {isLoading ? (
               <Loading />
@@ -128,23 +148,25 @@ const JobDescription = () => {
                       <Tag color="magenta">{`${job.data.experienceLevel}+ year exp`}</Tag>
                     </div>
                   </div>
-                  {/* <Button
-                    onClick={isApplied ? null : applyJobHandler}
-                    disabled={isApplied}
-                  className={`rounded-lg ${
-                    isApplied
-                      ? "bg-gray-600 cursor-not-allowed"
-                      : "bg-[#7209b7] hover:bg-[#5f32ad]"
-                  }`}
-                >
-                  {isApplied ? "Already Applied" : "Apply Now"}
-                </Button> */}
-                  <button
-                    type="submit"
-                    className="md:w-36 w-28 font-medium md:font-semibold border-2 text-white bg-[#6A38C2] rounded-md p-2 hover:shadow-md"
-                  >
-                    Apply
-                  </button>
+                  {job.data.applications.some(
+                    (applicant) => applicant === user.id
+                  ) ? (
+                    <button
+                      disabled
+                      type="button"
+                      className="md:w-36 w-28 font-medium md:font-semibold cursor-not-allowed border-2 text-white bg-[#6A38C2] rounded-md p-2 hover:shadow-md"
+                    >
+                      Applied
+                    </button>
+                  ) : (
+                    <button
+                      onClick={handleApplyJob}
+                      type="button"
+                      className="md:w-36 w-28 font-medium md:font-semibold border-2 text-white bg-[#6A38C2] rounded-md p-2 hover:shadow-md"
+                    >
+                      Apply
+                    </button>
+                  )}
                 </div>
                 <Divider />
                 <Descriptions

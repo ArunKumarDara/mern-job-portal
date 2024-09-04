@@ -28,7 +28,7 @@ const Profile = () => {
     isLoading,
   } = useQuery({
     queryKey: ["user", user],
-    queryFn: () => getUser({ userId: user }),
+    queryFn: () => getUser({ userId: user.id }),
     enabled: !!user,
   });
 

@@ -28,8 +28,9 @@ const applyJob = async (req, res) => {
       job: jobId,
       applicant: userId,
     });
+    job.applications.push(newApplication.applicant);
     const response = await newApplication.save();
-    job.applications.push(response._id);
+    job.applications.push(response.applicant);
     await job.save();
     res.status(201).json({
       success: true,

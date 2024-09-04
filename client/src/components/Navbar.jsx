@@ -1,21 +1,25 @@
-import { Popover, Avatar, Button, Drawer, Spin } from "antd";
+import { Popover, Avatar, Button, Drawer, Spin, message } from "antd";
 import {
   UserOutlined,
   LogoutOutlined,
   LoadingOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
 import Login from "../pages/Login";
 import Signup from "../pages/Signup";
 import { useQuery } from "@tanstack/react-query";
-import { getUser } from "../apiCalls/user";
+import { getUser, logoutUser } from "../apiCalls/user";
+import { setUser } from "../store/userSlice";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const { user } = useSelector((state) => state.users);
   const [loginDrawer, setLoginDrawer] = useState(false);
   const [signupDrawer, setSignupDrawer] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const {
     data: userData,
@@ -23,11 +27,29 @@ const Navbar = () => {
     isLoading,
   } = useQuery({
     queryKey: ["user"],
-    queryFn: () => getUser({ userId: user }),
+    queryFn: () => getUser({ userId: user.id }),
     enabled: !!user,
   });
 
-  if (isLoading) return <Spin indicator={<LoadingOutlined spin />} />;
+  const handleLogout = async () => {
+    try {
+      const response = await logoutUser();
+      if (response.success) {
+        message.success(response.message);
+        dispatch(setUser(null));
+        navigate("/");
+      }
+    } catch (error) {
+      message.error(error.message);
+    }
+  };
+
+  if (isLoading)
+    return (
+      <div className="bg-white pt-4 pb-4 pl-6 pr-6  md:pl-12 md:pr-12 border-b fixed w-full z-50 shadow-md flex justify-center items-center">
+        <Spin indicator={<LoadingOutlined spin />} />
+      </div>
+    );
   if (error) return <div>Error: {error.message}</div>;
 
   return (
@@ -79,7 +101,11 @@ const Navbar = () => {
                             View Profile
                           </Button>
                         </Link>
-                        <Button type="link" className="text-black">
+                        <Button
+                          type="link"
+                          className="text-black"
+                          onClick={handleLogout}
+                        >
                           <LogoutOutlined />
                           Logout
                         </Button>

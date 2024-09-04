@@ -84,6 +84,7 @@ const getAllJobs = async (req, res) => {
     const jobs = await jobModel
       .find(query)
       .populate("company")
+      .populate("applications")
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
@@ -111,6 +112,7 @@ const getLatestJobs = async (req, res) => {
     const jobs = await jobModel
       .find(query)
       .populate("company")
+      .populate("applications")
       .sort({ createdAt: -1 })
       .limit(limit);
     return res.status(200).json({
@@ -146,6 +148,7 @@ const getAdminJobs = async (req, res) => {
     const jobs = await jobModel
       .find({ createdBy: userId })
       .populate("company")
+      .populate("applications")
       .sort({ createdAt: -1 });
     if (!jobs) {
       return res.status(404).json({ success: false, message: "No jobs found" });

@@ -1,22 +1,36 @@
 const companyModel = require("../models/companyModel");
+const cloudinary = require("cloudinary").v2;
+const fs = require("fs");
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const registerCompany = async (req, res) => {
   try {
-    const { name } = req.body;
-    if (!name) {
+    const uploadResult = await cloudinary.uploader.upload(req.file.path);
+    fs.unlink(req.file.path, (err) => {
+      if (err) console.log(err);
+    });
+    const { name, description, website, location, employees } = req.body;
+    if (!name || !description || !website || !location || !employees) {
       return res.status(400).json({
-        message: "Company name is required",
+        message: "Some fields are missing",
         success: false,
       });
     }
-    const company = await companyModel.findOne({ name });
-    if (company) {
-      return res.status(400).json({
-        message: "Company already exists",
-        success: false,
-      });
-    }
-    const newCompany = new companyModel({ name, createdBy: req.id });
+    const logo = uploadResult.secure_url;
+    const newCompany = new companyModel({
+      name,
+      description,
+      website,
+      location,
+      employees,
+      logo,
+      createdBy: req.id,
+    });
     response = await newCompany.save();
     return res.status(201).json({
       message: "Company registered successfully",
@@ -56,7 +70,9 @@ const getAllCompanies = async (req, res) => {
 const getCompaniesByUser = async (req, res) => {
   try {
     const userId = req.id;
-    const companies = await companyModel.find({ createdBy: userId });
+    const companies = await companyModel
+      .find({ createdBy: userId })
+      .sort({ createdAt: -1 });
     if (!companies) {
       return res.status(404).json({
         message: "No companies found",

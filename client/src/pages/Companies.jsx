@@ -6,6 +6,7 @@ import { useState } from "react";
 
 const Companies = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
+  const [selectedCompany, setSelectedCompany] = useState({});
 
   return (
     <div>
@@ -22,16 +23,26 @@ const Companies = () => {
               New Company
             </button>
           </div>
-          <CompaniesTable />
+          <CompaniesTable
+            setOpenDrawer={setOpenDrawer}
+            selectedCompany={selectedCompany}
+            setSelectedCompany={setSelectedCompany}
+          />
         </div>
       </div>
       {openDrawer && (
         <Drawer
           open={openDrawer}
-          onClose={() => setOpenDrawer(false)}
+          onClose={() => {
+            setOpenDrawer(false), setSelectedCompany({});
+          }}
           title="Add Company"
         >
-          <CompanyForm setOpenDrawer={setOpenDrawer} />
+          <CompanyForm
+            setOpenDrawer={setOpenDrawer}
+            selectedCompany={selectedCompany}
+            setSelectedCompany={setSelectedCompany}
+          />
         </Drawer>
       )}
     </div>

@@ -1,20 +1,29 @@
 /* eslint-disable react/prop-types */
 import { Input, Form, InputNumber, Upload, message } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
+import { LoadingOutlined, UploadOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addCompany } from "../apiCalls/company";
+import { addCompany, updateCompany } from "../apiCalls/company";
 
 const { TextArea } = Input;
 
-const CompanyForm = ({ setOpenDrawer }) => {
+const CompanyForm = ({
+  setOpenDrawer,
+  selectedCompany,
+  setSelectedCompany,
+}) => {
   const [fileList, setFileList] = useState([]);
   const queryClient = useQueryClient();
+  const isEdit = Object.keys(selectedCompany).length;
+  const { logo, ...initialValues } = selectedCompany;
 
-  const { mutate: mutateCompany } = useMutation({
-    mutationFn: addCompany,
+  const mutationFn = isEdit ? updateCompany : addCompany;
+
+  const { mutate: mutateCompany, isPending } = useMutation({
+    mutationFn,
     onSuccess: (response) => {
       setOpenDrawer(false);
+      setSelectedCompany({});
       queryClient.invalidateQueries({ queryKey: ["companies"] });
       message.success(response.message);
     },
@@ -24,8 +33,11 @@ const CompanyForm = ({ setOpenDrawer }) => {
   });
 
   const onFinish = (values) => {
-    mutateCompany({ ...values, logo: fileList });
-    console.log({ ...values, logo: fileList });
+    const payload = { ...values, logo: fileList };
+    if (isEdit) {
+      payload.id = selectedCompany._id;
+    }
+    mutateCompany(payload);
   };
 
   const handleUploadChange = (info) => {
@@ -33,7 +45,11 @@ const CompanyForm = ({ setOpenDrawer }) => {
   };
 
   return (
-    <Form layout="vertical" onFinish={onFinish}>
+    <Form
+      layout="vertical"
+      onFinish={onFinish}
+      initialValues={isEdit ? initialValues : {}}
+    >
       <Form.Item
         label="Company Name"
         name="name"
@@ -78,8 +94,18 @@ const CompanyForm = ({ setOpenDrawer }) => {
         <button
           type="submit"
           className="w-full font-semibold text-white bg-[#6A38C2] rounded-md mb-3 p-3 hover:shadow-md"
+          disabled={isPending}
         >
-          ADD COMPANY
+          {isPending ? (
+            <>
+              <LoadingOutlined style={{ marginRight: 8 }} />
+              {isEdit ? "UPDATING..." : "ADDING..."}
+            </>
+          ) : isEdit ? (
+            "UPDATE COMPANY"
+          ) : (
+            "ADD COMPANY"
+          )}
         </button>
       </Form.Item>
     </Form>

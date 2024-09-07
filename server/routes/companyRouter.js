@@ -19,6 +19,11 @@ companyRouter.post(
 companyRouter.get("/getAllCompanies", validateJwtToken, getAllCompanies);
 companyRouter.get("/getCompaniesByUser", validateJwtToken, getCompaniesByUser);
 companyRouter.get("/:id", validateJwtToken, getCompanyById);
-companyRouter.post("/update/:id", validateJwtToken, updateCompany);
+companyRouter.post(
+  "/update/:id",
+  multerLogoUploader,
+  validateJwtToken,
+  updateCompany
+);
 
 module.exports = companyRouter;

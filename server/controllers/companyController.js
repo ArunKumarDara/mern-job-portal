@@ -117,10 +117,15 @@ const getCompanyById = async (req, res) => {
 
 const updateCompany = async (req, res) => {
   try {
+    const uploadResult = await cloudinary.uploader.upload(req.file.path);
+    fs.unlink(req.file.path, (err) => {
+      if (err) console.log(err);
+    });
     const companyId = req.params.id;
+    const logo = uploadResult.secure_url;
     const updatedCompany = await companyModel.findByIdAndUpdate(
       companyId,
-      req.body,
+      { ...req.body, logo: logo },
       { new: true }
     );
     if (!updatedCompany) {

@@ -1,18 +1,19 @@
 /* eslint-disable react/prop-types */
-import { Form, Input, message, Select } from "antd";
-import { useNavigate } from "react-router-dom";
+import { Form, Input, message, Select, Drawer } from "antd";
 import { useMutation } from "@tanstack/react-query";
 import { registerUser } from "../apiCalls/user";
+import { useState } from "react";
+import Login from "./Login";
 
 const Signup = ({ setSignupDrawer }) => {
-  const navigate = useNavigate();
+  const [loginDrawer, setLoginDrawer] = useState(false);
 
   const mutation = useMutation({
     mutationFn: registerUser,
     onSuccess: (data) => {
       setSignupDrawer(false);
       message.success(data.message);
-      navigate("/login");
+      setLoginDrawer(true);
     },
     onError: (data) => {
       message.error(data.message);
@@ -88,6 +89,15 @@ const Signup = ({ setSignupDrawer }) => {
           </div>
         </Form.Item>
       </Form>
+      {loginDrawer && (
+        <Drawer
+          title="Login"
+          open={loginDrawer}
+          onClose={() => setLoginDrawer(false)}
+        >
+          <Login setLoginDrawer={setLoginDrawer} />
+        </Drawer>
+      )}
     </>
   );
 };

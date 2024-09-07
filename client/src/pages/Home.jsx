@@ -1,10 +1,20 @@
 // import CategoryCarousel from "../components/CategoryCarousel";
+import { useEffect } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "./Footer";
 import HeroSection from "./HeroSection";
 import LatestJobs from "./LatestJobs";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const { user } = useSelector((state) => state.users);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (user && user?.role === "recruiter") {
+      navigate("/admin/companies");
+    }
+  }, [user]);
   return (
     <div>
       <Navbar />

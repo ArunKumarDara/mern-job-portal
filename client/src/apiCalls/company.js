@@ -21,3 +21,20 @@ export const addCompany = async (payload) => {
     return error.message;
   }
 };
+
+export const updateCompany = async (payload) => {
+  try {
+    const response = await axiosInstance.post(
+      `/company/update/${payload.id}`,
+      payload,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    return error.messages;
+  }
+};

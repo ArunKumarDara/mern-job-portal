@@ -8,7 +8,7 @@ const {
   getCurrentUser,
 } = require("../controllers/userController");
 const validateJwtToken = require("../middlewares/authentication");
-const multerUploader = require("../userProfile/uploadProfile");
+const multerUserProfileUploader = require("../userProfile/uploadProfile");
 
 const userRouter = express.Router();
 
@@ -18,7 +18,7 @@ userRouter.get("/logout", userLogout);
 userRouter.post("/updateProfile", validateJwtToken, updateProfile);
 userRouter.put(
   "/uploadProfilePic",
-  multerUploader,
+  multerUserProfileUploader,
   validateJwtToken,
   uploadProfilePic
 );

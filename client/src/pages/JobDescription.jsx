@@ -23,8 +23,9 @@ const JobDescription = () => {
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: ["job"],
+    queryKey: ["job", jobId],
     queryFn: () => getJob(jobId),
+    enabled: !!user,
   });
 
   const { mutate: mutateJob } = useMutation({
@@ -130,26 +131,28 @@ const JobDescription = () => {
                     src="https://st3.depositphotos.com/43745012/44906/i/450/depositphotos_449066958-stock-photo-financial-accounting-logo-financial-logo.jpg"
                   />
                   <h1 className="font-medium text-lg">
-                    {job.data.company.name}
+                    {job?.data?.company?.name}
                   </h1>
                 </div>
                 <div className="flex items-start justify-between">
                   <div>
-                    <h1 className="font-bold text-xl mb-1">{job.data.title}</h1>
+                    <h1 className="font-bold text-xl mb-1">
+                      {job?.data?.title}
+                    </h1>
                     <p className="text-sm text-gray-400">
                       <EnvironmentOutlined className="mr-1" />
-                      {job.data.location}
+                      {job?.data?.location}
                       <span> · </span>
                       <span> {createdDate.from(now)}</span>
                     </p>
                     <div className="flex justify-start items-center gap-2 mt-4">
-                      <Tag color="purple">{`${job.data.salary} LPA`}</Tag>
-                      <Tag color="green">{`${job.data.positions} Positions`}</Tag>
-                      <Tag color="magenta">{`${job.data.experienceLevel}+ year exp`}</Tag>
+                      <Tag color="purple">{`${job?.data?.salary} LPA`}</Tag>
+                      <Tag color="green">{`${job?.data?.positions} Positions`}</Tag>
+                      <Tag color="magenta">{`${job?.data?.experienceLevel}+ year exp`}</Tag>
                     </div>
                   </div>
-                  {job.data.applications.some(
-                    (applicant) => applicant === user.id
+                  {job?.data?.applications.some(
+                    (applicant) => applicant === user?.id
                   ) ? (
                     <button
                       disabled

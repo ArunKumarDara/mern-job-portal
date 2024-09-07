@@ -65,17 +65,28 @@ const Navbar = () => {
           </div>
           <div className="flex items-center gap-4">
             <ul className="flex font-medium items-center gap-5 cursor-pointer">
-              <Link to="/jobs">
-                <li>Jobs</li>
-              </Link>
-            </ul>
-            {user ? (
-              <div className="gap-4 flex items-center">
-                <ul className="font-medium cursor-pointer">
+              {user && user.role === "recruiter" ? (
+                <>
+                  <Link to="/admin/companies">
+                    <li>Companies</li>
+                  </Link>
+                  <Link to="/admin/jobs">
+                    <li>Jobs </li>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link to="/jobs">
+                    <li>Jobs</li>
+                  </Link>
                   <Link to="/browse">
                     <li>Browse</li>
                   </Link>
-                </ul>
+                </>
+              )}
+            </ul>
+            {user ? (
+              <div className="gap-4 flex items-center">
                 <Popover
                   placement="bottomRight"
                   content={
@@ -95,12 +106,14 @@ const Navbar = () => {
                         </div>
                       </div>
                       <div className="flex flex-col text-gray-600 justify-start items-start mt-3">
-                        <Link to="/profile">
-                          <Button type="link" className="text-black">
-                            <UserOutlined />
-                            View Profile
-                          </Button>
-                        </Link>
+                        {user.role === "student" && (
+                          <Link to="/profile">
+                            <Button type="link" className="text-black">
+                              <UserOutlined />
+                              View Profile
+                            </Button>
+                          </Link>
+                        )}
                         <Button
                           type="link"
                           className="text-black"

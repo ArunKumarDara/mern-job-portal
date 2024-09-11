@@ -34,7 +34,11 @@ export const getUser = async (payload) => {
 
 export const updateProfile = async (payload) => {
   try {
-    const response = await axiosInstance.post("/user/updateProfile", payload);
+    const response = await axiosInstance.post("/user/updateProfile", payload, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return response.data;
   } catch (error) {
     return error.response.data;

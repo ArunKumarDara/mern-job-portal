@@ -5,7 +5,7 @@ import { updateProfile } from "../apiCalls/user";
 import { getAllCompanies } from "../apiCalls/company";
 import Loading from "../components/Loading";
 import { useState } from "react";
-import { UploadOutlined } from "@ant-design/icons";
+import { UploadOutlined, LoadingOutlined } from "@ant-design/icons";
 
 const UpdateProfile = ({ setOpen, userData }) => {
   const queryClient = useQueryClient();
@@ -22,7 +22,7 @@ const UpdateProfile = ({ setOpen, userData }) => {
     queryFn: getAllCompanies,
   });
 
-  const { mutate: mutateProfile } = useMutation({
+  const { mutate: mutateProfile, isPending } = useMutation({
     mutationFn: updateProfile,
     onSuccess: (response) => {
       setOpen(false);
@@ -119,7 +119,14 @@ const UpdateProfile = ({ setOpen, userData }) => {
             type="submit"
             className="w-full font-semibold text-white bg-[#6A38C2] rounded-md mb-3 p-3 hover:shadow-md"
           >
-            UPDATE
+            {isPending ? (
+              <>
+                <LoadingOutlined style={{ marginRight: 8 }} />
+                UPDATING...
+              </>
+            ) : (
+              "UPDATE PROFILE"
+            )}
           </button>
         </Form.Item>
       </Form>

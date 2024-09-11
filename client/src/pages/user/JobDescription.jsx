@@ -98,7 +98,7 @@ const JobDescription = () => {
     },
     {
       key: "8",
-      label: "Total Applicants",
+      label: "Openings",
       children: job?.data.positions,
     },
     {
@@ -129,10 +129,7 @@ const JobDescription = () => {
             ) : (
               <>
                 <div className="flex justify-start items-center gap-2">
-                  <Avatar
-                    shape="square"
-                    src="https://st3.depositphotos.com/43745012/44906/i/450/depositphotos_449066958-stock-photo-financial-accounting-logo-financial-logo.jpg"
-                  />
+                  <Avatar shape="square" src={job?.data?.company?.logo} />
                   <h1 className="font-medium text-lg">
                     {job?.data?.company?.name}
                   </h1>

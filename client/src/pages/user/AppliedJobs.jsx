@@ -1,74 +1,60 @@
-import { Table, Tag } from "antd";
-const columns = [
-  {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
-    render: (text) => <a>{text}</a>,
-  },
-  {
-    title: "Age",
-    dataIndex: "age",
-    key: "age",
-  },
-  {
-    title: "Address",
-    dataIndex: "address",
-    key: "address",
-  },
-  {
-    title: "Tags",
-    key: "tags",
-    dataIndex: "tags",
-    render: (_, { tags }) => (
-      <>
-        {tags.map((tag) => {
-          let color = tag.length > 5 ? "geekblue" : "green";
-          if (tag === "loser") {
-            color = "volcano";
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
-  },
-  // {
-  //   title: "Action",
-  //   key: "action",
-  //   render: (_, record) => (
-  //     <Space size="middle">
-  //       <a>Invite {record.name}</a>
-  //       <a>Delete</a>
-  //     </Space>
-  //   ),
-  // },
-];
-const data = [
-  {
-    key: "1",
-    name: "John Brown",
-    age: 32,
-    address: "New York No. 1 Lake Park",
-    tags: ["nice", "developer"],
-  },
-  {
-    key: "2",
-    name: "Jim Green",
-    age: 42,
-    address: "London No. 1 Lake Park",
-    tags: ["loser"],
-  },
-  {
-    key: "3",
-    name: "Joe Black",
-    age: 32,
-    address: "Sydney No. 1 Lake Park",
-    tags: ["cool", "teacher"],
-  },
-];
-const AppliedJobTable = () => <Table columns={columns} dataSource={data} />;
+import { useQuery } from "@tanstack/react-query";
+import { Table, Tag, Spin } from "antd";
+import { getAppliedJobs } from "../../apiCalls/application";
+import { LoadingOutlined } from "@ant-design/icons";
+import moment from "moment";
+
+const AppliedJobTable = () => {
+  const {
+    data: appliedJobs,
+    error,
+    isLoading,
+  } = useQuery({
+    queryKey: ["appliedJobs"],
+    queryFn: getAppliedJobs,
+  });
+
+  if (error) return <div>Error: {error.message}</div>;
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center">
+        <Spin indicator={<LoadingOutlined spin />} />
+      </div>
+    );
+  const columns = [
+    {
+      title: "Date",
+      dataIndex: "createdAt",
+      key: "date",
+      render: (text) => <a>{moment(text).format("MMM Do YY")}</a>,
+    },
+    {
+      title: "Job Role",
+      key: "title",
+      render: (record) => <a>{record?.job?.title}</a>,
+    },
+    {
+      title: "Company",
+      key: "company",
+      render: (record) => <a>{record?.job?.company?.name}</a>,
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (status) => {
+        if (status === "accepted") {
+          return <Tag color="success">Accepted</Tag>;
+        } else if (status === "rejected") {
+          return <Tag color="error">Rejected</Tag>;
+        } else if (status === "pending") {
+          return <Tag color="processing">Pending</Tag>;
+        } else {
+          return <Tag color="default">Unknown</Tag>;
+        }
+      },
+    },
+  ];
+  return <Table dataSource={appliedJobs?.data} columns={columns} />;
+};
 export default AppliedJobTable;

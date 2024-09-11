@@ -34,3 +34,12 @@ export const updateApplicationStatus = async (payload) => {
     return error.response.data;
   }
 };
+
+export const getAppliedJobs = async () => {
+  try {
+    const response = await axiosInstance.get("/application/getAppliedJobs");
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};

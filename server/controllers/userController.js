@@ -112,6 +112,11 @@ const userLogout = async (req, res) => {
 
 const updateProfile = async (req, res) => {
   try {
+    const uploadResult = await cloudinary.uploader.upload(req.file.path);
+    fs.unlink(req.file.path, (err) => {
+      if (err) console.log(err);
+    });
+    const originalname = req.file.originalname;
     const { fullName, email, phoneNumber, bio, skills, company } = req.body;
     if (!fullName || !email || !phoneNumber || !bio || !skills || !company) {
       return res
@@ -134,6 +139,8 @@ const updateProfile = async (req, res) => {
     user.profile.bio = bio;
     user.profile.skills = skillsArray;
     user.profile.company = company;
+    user.profile.resume = uploadResult.secure_url;
+    user.profile.resumeOriginalName = originalname;
 
     await user.save();
     return res.status(200).json({

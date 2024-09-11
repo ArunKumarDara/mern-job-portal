@@ -12,3 +12,12 @@ export const applyJob = async (payload) => {
     return error.response.data;
   }
 };
+
+export const getApplications = async (jobId) => {
+  try {
+    const response = await axiosInstance.get(`/application/get/${jobId}`);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};

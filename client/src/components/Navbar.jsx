@@ -7,8 +7,8 @@ import {
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
-import Login from "../pages/Login";
-import Signup from "../pages/Signup";
+import Login from "../pages/auth/Login";
+import Signup from "../pages/auth/Signup";
 import { useQuery } from "@tanstack/react-query";
 import { getUser, logoutUser } from "../apiCalls/user";
 import { setUser } from "../store/userSlice";

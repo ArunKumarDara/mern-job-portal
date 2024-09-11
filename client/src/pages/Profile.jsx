@@ -9,7 +9,7 @@ import {
   PlusOutlined,
   LoadingOutlined,
 } from "@ant-design/icons";
-import AppliedJobTable from "./AppliedJobs";
+import AppliedJobTable from "./user/AppliedJobs";
 import UpdateProfile from "./UpdateProfile";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUser, uploadProfilePhoto } from "../apiCalls/user";

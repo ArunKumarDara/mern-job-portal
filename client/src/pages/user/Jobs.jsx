@@ -19,14 +19,14 @@ import {
   ArrowLeftOutlined,
   LoadingOutlined,
 } from "@ant-design/icons";
-import Navbar from "../components/Navbar";
+import Navbar from "../../components/Navbar";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { addToList, removeFromList } from "../store/watchListSlice";
+import { addToList, removeFromList } from "../../store/watchListSlice";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { getJobs } from "../apiCalls/job";
-import Footer from "./Footer";
+import { getJobs } from "../../apiCalls/job";
+import Footer from "../../components/Footer";
 import { useState } from "react";
 
 const Jobs = () => {

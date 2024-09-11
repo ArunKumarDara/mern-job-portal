@@ -1,7 +1,7 @@
 // import CategoryCarousel from "../components/CategoryCarousel";
 import { useEffect } from "react";
 import Navbar from "../components/Navbar";
-import Footer from "./Footer";
+import Footer from "../components/Footer";
 import HeroSection from "./HeroSection";
 import LatestJobs from "./LatestJobs";
 import { useSelector } from "react-redux";

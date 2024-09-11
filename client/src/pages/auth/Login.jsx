@@ -1,22 +1,30 @@
-/* eslint-disable react/prop-types */
-import { Form, Input, message, Select, Drawer } from "antd";
+/* eslint-disable no-unused-vars */
+import { Form, Input, Select, Typography, message } from "antd";
+import { Link, useNavigate } from "react-router-dom";
+import { loginUser } from "../../apiCalls/user";
 import { useMutation } from "@tanstack/react-query";
-import { registerUser } from "../apiCalls/user";
-import { useState } from "react";
-import Login from "./Login";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../store/userSlice";
 
-const Signup = ({ setSignupDrawer }) => {
-  const [loginDrawer, setLoginDrawer] = useState(false);
+// eslint-disable-next-line react/prop-types
+const Login = ({ setLoginDrawer }) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const mutation = useMutation({
-    mutationFn: registerUser,
+    mutationFn: loginUser,
     onSuccess: (data) => {
-      setSignupDrawer(false);
-      message.success(data.message);
-      setLoginDrawer(true);
+      if (data.success) {
+        setLoginDrawer(false);
+        message.success(data.message);
+        dispatch(setUser({ id: data.user._id, role: data.user.role }));
+        navigate("/");
+      } else {
+        message.error(data.message);
+      }
     },
-    onError: (data) => {
-      message.error(data.message);
+    onError: (error) => {
+      message.error(error.message);
     },
   });
 
@@ -28,25 +36,9 @@ const Signup = ({ setSignupDrawer }) => {
     <>
       <Form layout="vertical" onFinish={onFinish}>
         <Form.Item
-          label="Full Name"
-          name="fullName"
-          rules={[{ required: true, message: "please enter your name" }]}
-        >
-          <Input size="large" />
-        </Form.Item>
-        <Form.Item
           label="Email"
           name="email"
           rules={[{ required: true, message: "please enter your email" }]}
-        >
-          <Input size="large" />
-        </Form.Item>
-        <Form.Item
-          label="Phone Number"
-          name="phoneNumber"
-          rules={[
-            { required: true, message: "please enter your phone number" },
-          ]}
         >
           <Input size="large" />
         </Form.Item>
@@ -84,22 +76,13 @@ const Signup = ({ setSignupDrawer }) => {
               type="submit"
               className="w-full font-semibold text-white bg-[#6A38C2] rounded-md mb-3 p-3 hover:shadow-md"
             >
-              SIGN UP
+              LOG IN
             </button>
           </div>
         </Form.Item>
       </Form>
-      {loginDrawer && (
-        <Drawer
-          title="Login"
-          open={loginDrawer}
-          onClose={() => setLoginDrawer(false)}
-        >
-          <Login setLoginDrawer={setLoginDrawer} />
-        </Drawer>
-      )}
     </>
   );
 };
 
-export default Signup;
+export default Login;

@@ -14,7 +14,6 @@ import UpdateProfile from "./UpdateProfile";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUser, uploadProfilePhoto } from "../apiCalls/user";
 import Loading from "../components/Loading";
-const isResume = true;
 
 const Profile = () => {
   const [open, setOpen] = useState(false);
@@ -146,7 +145,7 @@ const Profile = () => {
             <div className="flex justify-start items-center gap-1">
               <Avatar
                 shape="square"
-                src="https://st3.depositphotos.com/43745012/44906/i/450/depositphotos_449066958-stock-photo-financial-accounting-logo-financial-logo.jpg"
+                src={userData?.data?.profile?.company?.logo}
               />
               <h1 className="text-sm font-medium">
                 {userData?.data?.profile?.company?.name}
@@ -169,7 +168,7 @@ const Profile = () => {
           </div>
           <div className="grid w-full max-w-sm items-center gap-1.5">
             <h1 className="text-md font-bold">Resume</h1>
-            {isResume ? (
+            {userData?.data?.profile?.resume && (
               <a
                 target="blank"
                 href={userData?.data?.profile?.resume}
@@ -177,8 +176,6 @@ const Profile = () => {
               >
                 {userData?.data?.profile?.resumeOriginalName}
               </a>
-            ) : (
-              <span>NA</span>
             )}
           </div>
         </div>

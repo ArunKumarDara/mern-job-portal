@@ -2,6 +2,15 @@ import axiosInstance from ".";
 
 export const getAllCompanies = async () => {
   try {
+    const response = await axiosInstance.get("/company/getAllCompanies");
+    return response.data;
+  } catch (error) {
+    return error.message;
+  }
+};
+
+export const getCompaniesByUser = async () => {
+  try {
     const response = await axiosInstance.get("/company/getCompaniesByUser");
     return response.data;
   } catch (error) {

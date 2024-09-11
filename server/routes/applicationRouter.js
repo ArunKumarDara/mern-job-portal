@@ -9,7 +9,7 @@ const validateJwtToken = require("../middlewares/authentication");
 const applicationRouter = express.Router();
 
 applicationRouter.post("/apply/:id", validateJwtToken, applyJob);
-applicationRouter.get("/get", validateJwtToken, getAppliedJobs);
+applicationRouter.get("/getAppliedJobs", validateJwtToken, getAppliedJobs);
 applicationRouter.get("/get/:id", validateJwtToken, getApplicants);
 applicationRouter.post("/:id/status/update", validateJwtToken, updateStatus);
 

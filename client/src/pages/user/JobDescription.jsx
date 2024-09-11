@@ -72,15 +72,19 @@ const JobDescription = () => {
     {
       key: "5",
       label: "Skills Required",
-      children: job?.data.requirements.map((skill) => (
-        <Tag
-          color="success"
-          className="pl-4 font-normal text-gray-800"
-          key={skill}
-        >
-          {skill}
-        </Tag>
-      )),
+      children: (
+        <div className="flex flex-wrap justify-start items-center">
+          {job?.data.requirements.map((skill) => (
+            <Tag
+              color="success"
+              className="pl-4 font-normal text-gray-800"
+              key={skill}
+            >
+              {skill}
+            </Tag>
+          ))}
+        </div>
+      ),
     },
     {
       key: "6",

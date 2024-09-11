@@ -46,7 +46,7 @@ const JobForm = ({ setOpenDrawer, selectedJob, setSelectedJob }) => {
   if (error) return <p>Error fetching latest jobs: {error.message}</p>;
 
   const selectedCompany = companies?.data?.find(
-    (company) => company._id === selectedJob.company._id
+    (company) => company?._id === selectedJob?.company?._id
   );
 
   return (

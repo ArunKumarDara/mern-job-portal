@@ -1,15 +1,17 @@
 /* eslint-disable react/prop-types */
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Form, Input, message, Select } from "antd";
+import { Form, Input, message, Select, Upload, Button } from "antd";
 import { updateProfile } from "../apiCalls/user";
 import { getAllCompanies } from "../apiCalls/company";
 import Loading from "../components/Loading";
 import { useState } from "react";
+import { UploadOutlined } from "@ant-design/icons";
 
 const UpdateProfile = ({ setOpen, userData }) => {
   const queryClient = useQueryClient();
   const [searchValue, setSearchValue] = useState("");
   const [selectedCompany, setSelectedCompany] = useState("");
+  const [resume, setResume] = useState([]);
 
   const {
     data: companies,
@@ -33,7 +35,7 @@ const UpdateProfile = ({ setOpen, userData }) => {
   });
 
   const onFinish = (values) => {
-    mutateProfile(values);
+    mutateProfile({ ...values, resume: resume });
   };
 
   const handleSearch = (value) => {
@@ -42,6 +44,10 @@ const UpdateProfile = ({ setOpen, userData }) => {
 
   const handleChange = (value) => {
     setSelectedCompany(value);
+  };
+
+  const handleUploadChange = (info) => {
+    setResume(info?.fileList[0].originFileObj);
   };
 
   if (companiesLoading) return <Loading />;
@@ -95,6 +101,18 @@ const UpdateProfile = ({ setOpen, userData }) => {
                 label: d.name,
               }))}
           />
+        </Form.Item>
+        <Form.Item name="resume" label="Resume">
+          <Upload
+            name="resume"
+            maxCount={1}
+            beforeUpload={() => false}
+            accept=".pdf"
+            onChange={handleUploadChange}
+            onRemove={() => setResume([])}
+          >
+            <Button icon={<UploadOutlined />}>Upload Resume</Button>
+          </Upload>
         </Form.Item>
         <Form.Item>
           <button

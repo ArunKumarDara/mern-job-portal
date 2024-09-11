@@ -33,3 +33,33 @@ export const getJob = async (jobId) => {
     return error.response.data;
   }
 };
+
+export const addJob = async (payload) => {
+  try {
+    const response = await axiosInstance.post("/job/add", payload);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+export const getAdminJobs = async () => {
+  try {
+    const response = await axiosInstance.get("/job/getAdminJobs");
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+export const updateJob = async (payload) => {
+  try {
+    const response = await axiosInstance.post(
+      `/job/update/${payload.id}`,
+      payload
+    );
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};

@@ -163,10 +163,67 @@ const getAdminJobs = async (req, res) => {
   }
 };
 
+const updateJob = async (req, res) => {
+  try {
+    const userId = req.id;
+    const jobId = req.params.id;
+    const {
+      title,
+      description,
+      requirements,
+      salary,
+      location,
+      jobType,
+      positions,
+      experienceLevel,
+      companyId,
+    } = req.body;
+    if (
+      !title ||
+      !description ||
+      !requirements ||
+      !salary ||
+      !location ||
+      !jobType ||
+      !positions ||
+      !experienceLevel ||
+      !companyId
+    ) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Some fields are missing" });
+    }
+    const updatedJob = await jobModel.findByIdAndUpdate(
+      jobId,
+      {
+        title,
+        description,
+        requirements: requirements.split(","),
+        salary: Number(salary),
+        location,
+        jobType,
+        positions,
+        experienceLevel,
+        company: companyId,
+        createdBy: userId,
+      },
+      { new: true }
+    );
+    return res.status(200).json({
+      success: true,
+      message: "Admin jobs updated successfully",
+      data: updatedJob,
+    });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
+};
+
 module.exports = {
   addJob,
   getAllJobs,
   getJobById,
   getAdminJobs,
   getLatestJobs,
+  updateJob,
 };

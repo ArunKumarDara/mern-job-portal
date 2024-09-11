@@ -10,7 +10,7 @@ import {
   Divider,
 } from "antd";
 import { useQuery } from "@tanstack/react-query";
-import { getAllCompanies } from "../../../apiCalls/company";
+import { getCompaniesByUser } from "../../../apiCalls/company";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import moment from "moment";
@@ -103,7 +103,7 @@ const CompaniesTable = ({
     error,
   } = useQuery({
     queryKey: ["companies"],
-    queryFn: getAllCompanies,
+    queryFn: getCompaniesByUser,
   });
 
   if (error) return <p>Error fetching latest jobs: {error.message}</p>;

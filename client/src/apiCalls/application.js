@@ -21,3 +21,16 @@ export const getApplications = async (jobId) => {
     return error.response.data;
   }
 };
+
+export const updateApplicationStatus = async (payload) => {
+  try {
+    const { status, applicationId } = payload;
+    const response = await axiosInstance.post(
+      `/application/${applicationId}/status/update`,
+      { status }
+    );
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};

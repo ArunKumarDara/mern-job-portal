@@ -24,7 +24,6 @@ const AdminJobs = () => {
           </div>
           <JobTable
             setOpenDrawer={setOpenDrawer}
-            selectedJob={selectedJob}
             setSelectedJob={setSelectedJob}
           />
         </div>

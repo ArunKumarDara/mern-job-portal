@@ -2,11 +2,15 @@
 import { Form, Input, message, Select, Drawer } from "antd";
 import { useMutation } from "@tanstack/react-query";
 import { registerUser } from "../../apiCalls/user";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Login from "./Login";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Signup = ({ setSignupDrawer }) => {
   const [loginDrawer, setLoginDrawer] = useState(false);
+  const { user } = useSelector((state) => state.users);
+  const navigate = useNavigate();
 
   const mutation = useMutation({
     mutationFn: registerUser,
@@ -23,6 +27,12 @@ const Signup = ({ setSignupDrawer }) => {
   const onFinish = (values) => {
     mutation.mutate(values);
   };
+
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <>

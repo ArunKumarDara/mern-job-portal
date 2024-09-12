@@ -3,13 +3,15 @@ import { Form, Input, Select, Typography, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../../apiCalls/user";
 import { useMutation } from "@tanstack/react-query";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../../store/userSlice";
+import { useEffect } from "react";
 
 // eslint-disable-next-line react/prop-types
 const Login = ({ setLoginDrawer }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.users);
 
   const mutation = useMutation({
     mutationFn: loginUser,
@@ -31,6 +33,12 @@ const Login = ({ setLoginDrawer }) => {
   const onFinish = (values) => {
     mutation.mutate(values);
   };
+
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <>

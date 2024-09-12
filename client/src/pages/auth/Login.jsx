@@ -6,6 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../../store/userSlice";
 import { useEffect } from "react";
+import { LoadingOutlined } from "@ant-design/icons";
 
 // eslint-disable-next-line react/prop-types
 const Login = ({ setLoginDrawer }) => {
@@ -13,7 +14,7 @@ const Login = ({ setLoginDrawer }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.users);
 
-  const mutation = useMutation({
+  const { mutation, isPending } = useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
       if (data.success) {
@@ -84,7 +85,14 @@ const Login = ({ setLoginDrawer }) => {
               type="submit"
               className="w-full font-semibold text-white bg-[#6A38C2] rounded-md mb-3 p-3 hover:shadow-md"
             >
-              LOG IN
+              {isPending ? (
+                <>
+                  <LoadingOutlined style={{ marginRight: 8 }} />
+                  LOGGING IN...
+                </>
+              ) : (
+                "LOGIN"
+              )}
             </button>
           </div>
         </Form.Item>

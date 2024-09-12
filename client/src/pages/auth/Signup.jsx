@@ -6,13 +6,14 @@ import { useState, useEffect } from "react";
 import Login from "./Login";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const Signup = ({ setSignupDrawer }) => {
   const [loginDrawer, setLoginDrawer] = useState(false);
   const { user } = useSelector((state) => state.users);
   const navigate = useNavigate();
 
-  const mutation = useMutation({
+  const { mutation, isPending } = useMutation({
     mutationFn: registerUser,
     onSuccess: (data) => {
       setSignupDrawer(false);
@@ -94,7 +95,14 @@ const Signup = ({ setSignupDrawer }) => {
               type="submit"
               className="w-full font-semibold text-white bg-[#6A38C2] rounded-md mb-3 p-3 hover:shadow-md"
             >
-              SIGN UP
+              {isPending ? (
+                <>
+                  <LoadingOutlined style={{ marginRight: 8 }} />
+                  LOGGING IN...
+                </>
+              ) : (
+                "LOGIN"
+              )}
             </button>
           </div>
         </Form.Item>

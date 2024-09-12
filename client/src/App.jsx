@@ -7,6 +7,7 @@ import JobDescription from "./pages/user/JobDescription";
 import Companies from "./pages/admin/companies/Companies";
 import Jobs from "./pages/user/Jobs";
 import Applications from "./pages/admin/jobs/Applications";
+import ProtectedRoute from "./pages/admin/ProtectedRoute";
 
 const appRouter = createBrowserRouter([
   {
@@ -31,15 +32,27 @@ const appRouter = createBrowserRouter([
   },
   {
     path: "/admin/companies",
-    element: <Companies />,
+    element: (
+      <ProtectedRoute>
+        <Companies />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/admin/jobs",
-    element: <AdminJobs />,
+    element: (
+      <ProtectedRoute>
+        <AdminJobs />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/admin/jobs/:id",
-    element: <Applications />,
+    element: (
+      <ProtectedRoute>
+        <Applications />
+      </ProtectedRoute>
+    ),
   },
 ]);
 

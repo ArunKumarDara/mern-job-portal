@@ -7,7 +7,9 @@ export const registerUser = async (payload) => {
 
 export const loginUser = async (payload) => {
   try {
-    const response = await axiosInstance.post("/user/login", payload);
+    const response = await axiosInstance.post("/user/login", payload, {
+      withCredentials: true,
+    });
     return response.data;
   } catch (error) {
     return error.response.data;

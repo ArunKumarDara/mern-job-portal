@@ -14,7 +14,7 @@ const Login = ({ setLoginDrawer }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.users);
 
-  const { mutation, isPending } = useMutation({
+  const { mutate: mutateLogin, isPending } = useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
       if (data.success) {
@@ -32,7 +32,7 @@ const Login = ({ setLoginDrawer }) => {
   });
 
   const onFinish = (values) => {
-    mutation.mutate(values);
+    mutateLogin(values);
   };
 
   useEffect(() => {

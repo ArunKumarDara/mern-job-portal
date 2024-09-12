@@ -13,7 +13,7 @@ const Signup = ({ setSignupDrawer }) => {
   const { user } = useSelector((state) => state.users);
   const navigate = useNavigate();
 
-  const { mutation, isPending } = useMutation({
+  const { mutate: mutateSignup, isPending } = useMutation({
     mutationFn: registerUser,
     onSuccess: (data) => {
       setSignupDrawer(false);
@@ -26,7 +26,7 @@ const Signup = ({ setSignupDrawer }) => {
   });
 
   const onFinish = (values) => {
-    mutation.mutate(values);
+    mutateSignup(values);
   };
 
   useEffect(() => {

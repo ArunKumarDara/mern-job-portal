@@ -46,7 +46,7 @@ const LatestJobs = () => {
     if (watchList.some((item) => item._id === job._id)) {
       dispatch(removeFromList(job));
     } else {
-      dispatch(addToList(job));
+      dispatch(addToList({ ...job, userId: user.id }));
     }
   };
 
